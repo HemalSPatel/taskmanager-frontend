@@ -46,10 +46,15 @@ export default function UpdateTask({ task }: { task: Task }) {
         updateMutation.mutate()
     }
 
+    const handleClose = (newOpenState: boolean) => {
+        setOpen(newOpenState)
+        setUpdatingTask({ ...task })
+    }
+
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog open={open} onOpenChange={handleClose}>
             <DialogTrigger asChild>
-                <Button variant="ghost" size={"icon"} className = "hover:bg-green-50 hover:text-green-600 bg-green-400 text-white">
+                <Button size={"icon"} className = "hover:bg-green-50 hover:text-green-600 bg-green-400 text-white">
                     <Pen />
                 </Button>
             </DialogTrigger>
@@ -91,16 +96,13 @@ export default function UpdateTask({ task }: { task: Task }) {
                         <Button 
                             type="button" 
                             variant="secondary"
-                            onClick={() => {
-                                setUpdatingTask({ ...task })
-                                setOpen(false)
-                            }}
+                            onClick={() => handleClose(false)}
                         >
                             Cancel
                         </Button>
                         <Button 
                             type="submit" 
-                            disabled={!updatingTask.title.trim() || updateMutation.isPending}
+                            disabled={!updatingTask.title.trim() || updateMutation.isPending || !updatingTask.id || (updatingTask.title.trim() === task.title && updatingTask.description.trim() === task.description)}
                         >
                             {updateMutation.isPending && (
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

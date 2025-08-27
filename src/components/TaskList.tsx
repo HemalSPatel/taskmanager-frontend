@@ -107,7 +107,6 @@ export default function TaskList() {
                         <UpdateTask task={task} />
 
                         <Button
-                            variant="ghost"
                             size="icon"
                             onClick={() => task.id && deleteMutation.mutate(task.id)}
                             disabled={deleteMutation.isPending}
