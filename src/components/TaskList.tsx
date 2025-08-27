@@ -6,6 +6,7 @@ import { Checkbox } from './ui/checkbox';
 import { Trash2, Loader2 } from 'lucide-react';
 import { Button } from './ui/button';
 import { toast } from 'sonner';
+import UpdateTask from './UpdateTask';
 
 export default function TaskList() {
     const queryClient = useQueryClient();
@@ -102,13 +103,15 @@ export default function TaskList() {
                                 <p className="text-sm text-gray-600">{task.description}</p>
                             )}
                         </div>
-                        
+
+                        <UpdateTask task={task} />
+
                         <Button
                             variant="ghost"
                             size="icon"
                             onClick={() => task.id && deleteMutation.mutate(task.id)}
                             disabled={deleteMutation.isPending}
-                            className="hover:bg-red-50 hover:text-red-600"
+                            className="hover:bg-red-50 hover:text-red-600 bg-red-400 text-white"
                         >
                             {deleteMutation.isPending && deleteMutation.variables === task.id ? (
                                 <Loader2 className="h-4 w-4 animate-spin" />
