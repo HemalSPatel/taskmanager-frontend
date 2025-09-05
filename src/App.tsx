@@ -1,16 +1,22 @@
-import TaskList from '@/components/TaskList';
-import CreateTask from './components/CreateTask';
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { AppLayout } from "@/components/layouts/AppLayout"
+import Home from "@/components/pages/Home"
+import All from "@/components/pages/All"
+import Groups from "@/components/pages/Groups"
 
 function App() {
   return (
-    <div className="container mx-auto p-4 max-w-4xl">
-      <h1 className="text-3xl font-bold mb-8">Task Manager</h1>
-      <div className='space-y-4'>
-        <CreateTask />
-        <TaskList />
-      </div>
-    </div>
-  );
+    <BrowserRouter>
+      <Routes>
+        <Route element={<AppLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/all" element={<All />} />
+          <Route path="/ungrouped" element={<Home />} />
+          <Route path="/groups" element={<Groups />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  )
 }
 
-export default App;
+export default App
