@@ -1,4 +1,4 @@
-import { GroupIcon, Home, ListTodoIcon } from "lucide-react"
+import { Globe, GroupIcon, Home, Ungroup } from "lucide-react"
 
 import {
   Sidebar,
@@ -21,13 +21,18 @@ const items = [
   {
     title: "All",
     url: "/all",
-    icon: ListTodoIcon,
+    icon: Globe,
   },
   {
     title: "Groups",
     url: "/groups",
     icon: GroupIcon,
   },
+  {
+    title: "Ungrouped",
+    url: "/ungrouped",
+    icon: Ungroup,
+  }
   
 ]
 

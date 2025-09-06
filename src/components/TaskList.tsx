@@ -8,13 +8,29 @@ import { Button } from './ui/button';
 import { toast } from 'sonner';
 import UpdateTask from './UpdateTask';
 
-export default function TaskList() {
+interface TaskListProps {
+    groupId?: number;
+    ungrouped?: boolean;
+}
+
+export default function TaskList({ groupId, ungrouped }: TaskListProps) {
     const queryClient = useQueryClient();
 
+    if (groupId && ungrouped) {
+        throw new Error('Cannot set ungrouped to true when groupId is provided');
+    }
+
     const { data: tasks = [], isLoading, error } = useQuery({
-        queryKey: ['tasks'],
+        queryKey: ['tasks', { groupId, ungrouped }],
         queryFn: async () => {
-            const response = await taskService.getAllTasks();
+            let response;
+            if (groupId) {
+                response = await taskService.getTasksByGroupId(groupId);
+            } else if (ungrouped) {
+                response = await taskService.getUngroupedTasks();
+            } else {
+                response = await taskService.getAllTasks();
+            }
             return response.data;
         }
     });
@@ -22,7 +38,7 @@ export default function TaskList() {
     const deleteMutation = useMutation({
         mutationFn: (id: number) => taskService.deleteTask(id),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['tasks'] });
+            queryClient.invalidateQueries({ queryKey: ['tasks', { groupId, ungrouped }] });
             toast.success('Task deleted successfully');
         },
         onError: () => {
@@ -36,22 +52,22 @@ export default function TaskList() {
             return taskService.updateTask(task.id, { ...task, completed: !task.completed });
         },
         onMutate: async (task) => {
-            await queryClient.cancelQueries({ queryKey: ['tasks'] });
+            await queryClient.cancelQueries({ queryKey: ['tasks', { groupId, ungrouped }] });
             
-            const previousTasks = queryClient.getQueryData(['tasks']);
+            const previousTasks = queryClient.getQueryData(['tasks', { groupId, ungrouped }]);
             
-            queryClient.setQueryData(['tasks'], (old: Task[] = []) =>
+            queryClient.setQueryData(['tasks', { groupId, ungrouped }], (old: Task[] = []) =>
                 old.map(t => t.id === task.id ? { ...t, completed: !t.completed } : t)
             );
             
             return { previousTasks };
         },
         onError: (_err, _task, context) => {
-            queryClient.setQueryData(['tasks'], context?.previousTasks);
+            queryClient.setQueryData(['tasks', { groupId, ungrouped }], context?.previousTasks);
             toast.error('Error updating task');
         },
         onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ['tasks'] });
+            queryClient.invalidateQueries({ queryKey: ['tasks', { groupId, ungrouped }] });
         }
     });
 
@@ -123,4 +139,5 @@ export default function TaskList() {
             ))}
         </div>
     )
+
 }

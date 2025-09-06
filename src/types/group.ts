@@ -1,7 +1,7 @@
 export interface Group {
     id: number;
-    name: string;
+    title: string;
+    taskCount?: number;
     createdAt: string;
     updatedAt?: string;
-    taskCount?: number;
 }

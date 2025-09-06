@@ -67,17 +67,25 @@ export default function UpdateTask({ task }: { task: Task }) {
                         </DialogDescription>
                     </DialogHeader>
                     <div className="flex-col items-center space-y-4 py-4">
-                        <div className="grid flex-1 gap-2">
-                            <Label htmlFor="title">
-                                Title <span className="text-red-500">*</span>
-                            </Label>
-                            <Input
-                                id="title"
-                                value={updatingTask.title}
-                                onChange={(e) => setUpdatingTask({ ...updatingTask, title: e.target.value })}
-                                placeholder="Enter task title"
-                                required
-                            />
+                        <div className="flex gap-2 ">
+                            <div className="grid flex-1 gap-2">
+                                <Label htmlFor="title">
+                                    Title <span className="text-red-500">*</span>
+                                </Label>
+                                <Input
+                                    id="title"
+                                    value={updatingTask.title}
+                                    onChange={(e) => setUpdatingTask({ ...updatingTask, title: e.target.value })}
+                                    placeholder="Enter task title"
+                                    required
+                                />
+                            </div>
+                            <div className="grid flex-1 gap-2">
+                                <Label htmlFor="group">
+                                    Group
+                                </Label>
+                                {/* <GroupDropdown value={updatingTask.group} onChange={(value) => setUpdatingTask({ ...updatingTask, group: value })} /> */}
+                            </div>
                         </div>
                         <div className="grid flex-1 gap-2">
                             <Label htmlFor="description">
