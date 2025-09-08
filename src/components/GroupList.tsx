@@ -2,8 +2,11 @@ import { groupService } from "@/services/api";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { Card, CardContent } from "./ui/card";
+import { useNavigate } from "react-router-dom";
 
 export default function GroupList() {
+    const navigate = useNavigate();
+
     const { data: groups = [], isLoading, error } = useQuery({
         queryKey: ['groups'],
         queryFn: async () => {
@@ -23,7 +26,7 @@ export default function GroupList() {
     return (
         <div className="">
             {groups.map(group => (
-                <a href={`/groups/${group.id}`} className="flex-1 p-2" key={group.id}>
+                <a onClick={() => navigate(`/groups/${group.id}`)} className="flex-1 p-2" key={group.id}>
                     <Card>
                         <CardContent className="flex items-start gap-4 p-4">
                             <h3 className={`font-semibold`}>

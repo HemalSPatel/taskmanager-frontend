@@ -10,6 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { useNavigate } from "react-router-dom"
 
 // Menu items.
 const items = [
@@ -37,6 +38,7 @@ const items = [
 ]
 
 export default function SideBar() {
+  const navigate = useNavigate();
   return (
     <Sidebar>
       <SidebarContent>
@@ -46,11 +48,11 @@ export default function SideBar() {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                  <SidebarMenuButton asChild onClick={() => navigate(item.url)}>
+                    <div>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </div>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
