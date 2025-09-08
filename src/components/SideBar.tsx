@@ -1,4 +1,5 @@
 import { Globe, GroupIcon, Home, Ungroup } from "lucide-react"
+import { useNavigate, useLocation } from "react-router-dom"
 
 import {
   Sidebar,
@@ -10,7 +11,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { useNavigate } from "react-router-dom"
 
 // Menu items.
 const items = [
@@ -39,6 +39,7 @@ const items = [
 
 export default function SideBar() {
   const navigate = useNavigate();
+  const location = useLocation();
   return (
     <Sidebar>
       <SidebarContent>
@@ -48,7 +49,11 @@ export default function SideBar() {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild onClick={() => navigate(item.url)}>
+                  <SidebarMenuButton 
+                    asChild 
+                    onClick={() => navigate(item.url)}
+                    className={location.pathname === item.url ? "bg-gray-300" : ""}
+                  >
                     <div>
                       <item.icon />
                       <span>{item.title}</span>
