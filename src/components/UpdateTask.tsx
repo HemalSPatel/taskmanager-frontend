@@ -16,9 +16,9 @@ import { toast } from "sonner"
 import { Textarea } from "./ui/textarea"
 import { useState } from "react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import type { Task } from "@/types/task"
+import type { TaskRequest } from "@/types/task"
 
-export default function UpdateTask({ task }: { task: Task }) {
+export default function UpdateTask({ task }: { task: TaskRequest }) {
     const [updatingTask, setUpdatingTask] = useState({ ...task })
     const [open, setOpen] = useState(false)
     const queryClient = useQueryClient()
@@ -110,7 +110,7 @@ export default function UpdateTask({ task }: { task: Task }) {
                         </Button>
                         <Button 
                             type="submit" 
-                            disabled={!updatingTask.title.trim() || updateMutation.isPending || !updatingTask.id || (updatingTask.title.trim() === task.title && updatingTask.description.trim() === task.description)}
+                            disabled={!updatingTask.title.trim() || updateMutation.isPending || !updatingTask.id || (updatingTask.title.trim() === task.title && updatingTask.description?.trim() === task.description)}
                         >
                             {updateMutation.isPending && (
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

@@ -1,6 +1,6 @@
 import axios from 'axios';
-import type { Task } from '@/types/task';
-import type { Group } from '@/types/group';
+import type { TaskRequest, TaskResponse } from '@/types/task';
+import type { GroupRequest, GroupResponse } from '@/types/group';
 
 const API_BASE_URL = 'http://localhost:8080/api';
 
@@ -12,22 +12,22 @@ const api = axios.create({
 });
 
 export const taskService = {
-  getAllTasks: () => api.get<Task[]>('/tasks'),
-  getTaskById: (id: number) => api.get<Task>(`/tasks/${id}`),
-  createTask: (task: Omit<Task, 'id'>) => api.post<Task>('/tasks', task),
-  updateTask: (id: number, task: Task) => api.put<Task>(`/tasks/${id}`, task),
+  getAllTasks: () => api.get<TaskResponse[]>('/tasks'),
+  getTaskById: (id: number) => api.get<TaskResponse>(`/tasks/${id}`),
+  createTask: (task: Omit<TaskRequest, 'id'>) => api.post<TaskResponse>('/tasks', task),
+  updateTask: (id: number, task: TaskRequest) => api.put<TaskResponse>(`/tasks/${id}`, task),
   deleteTask: (id: number) => api.delete(`/tasks/${id}`),
-  getTasksByGroupId: (groupId: number) => api.get<Task[]>(`/groups/${groupId}/tasks`),
-  getUngroupedTasks: () => api.get<Task[]>('/tasks/ungrouped'),
+  getTasksByGroupId: (groupId: number) => api.get<TaskResponse[]>(`/groups/${groupId}/tasks`),
+  getUngroupedTasks: () => api.get<TaskResponse[]>('/tasks/ungrouped'),
   assignTaskToGroup: (taskId: number, groupId: number) => api.post(`/tasks/${taskId}/group/${groupId}`),
   removeTaskFromGroup: (taskId: number) => api.delete(`/tasks/${taskId}/remove-group`),
 };
 
 export const groupService = {
-  getAllGroups: () => api.get<Group[]>('/groups'),
-  getGroupById: (id: number) => api.get<Group>(`/groups/${id}`),
-  createGroup: (group: Omit<Group, 'id'>) => api.post<Group>('/groups', group),
-  updateGroup: (id: number, group: Group) => api.put<Group>(`/groups/${id}`, group),
+  getAllGroups: () => api.get<GroupResponse[]>('/groups'),
+  getGroupById: (id: number) => api.get<GroupResponse>(`/groups/${id}`),
+  createGroup: (group: Omit<GroupRequest, 'id'>) => api.post<GroupResponse>('/groups', group),
+  updateGroup: (id: number, group: GroupRequest) => api.put<GroupResponse>(`/groups/${id}`, group),
   deleteGroup: (id: number) => api.delete(`/groups/${id}`),
-  getTasksByGroupId: (id: number) => api.get<Task[]>(`/groups/${id}/tasks`),
-}
+  getTasksByGroupId: (id: number) => api.get<TaskResponse[]>(`/groups/${id}/tasks`),
+};

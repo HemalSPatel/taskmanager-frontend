@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { taskService } from '@/services/api'
-import type { Task } from '@/types/task'
+import type { TaskResponse } from '@/types/task'
 import { Card, CardContent } from './ui/card';
 import { Checkbox } from './ui/checkbox';
 import { Trash2, Loader2 } from 'lucide-react';
@@ -47,7 +47,7 @@ export default function TaskList({ groupId, ungrouped }: TaskListProps) {
     });
 
     const updateMutation = useMutation({
-        mutationFn: (task: Task) => {
+        mutationFn: (task: TaskResponse) => {
             if (!task.id) throw new Error('Task ID is required');
             return taskService.updateTask(task.id, { ...task, completed: !task.completed });
         },
@@ -55,8 +55,8 @@ export default function TaskList({ groupId, ungrouped }: TaskListProps) {
             await queryClient.cancelQueries({ queryKey: ['tasks', { groupId, ungrouped }] });
             
             const previousTasks = queryClient.getQueryData(['tasks', { groupId, ungrouped }]);
-            
-            queryClient.setQueryData(['tasks', { groupId, ungrouped }], (old: Task[] = []) =>
+
+            queryClient.setQueryData(['tasks', { groupId, ungrouped }], (old: TaskResponse[] = []) =>
                 old.map(t => t.id === task.id ? { ...t, completed: !t.completed } : t)
             );
             

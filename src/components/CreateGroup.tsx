@@ -22,7 +22,7 @@ export default function CreateGroup() {
     const queryClient = useQueryClient()
 
     const createMutation = useMutation({
-        mutationFn: () => groupService.createGroup({ ...formData, createdAt: new Date().toISOString() }),
+        mutationFn: () => groupService.createGroup({ ...formData }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['groups'] })
             toast.success('Group created successfully!')
