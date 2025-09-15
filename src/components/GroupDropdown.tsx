@@ -22,13 +22,13 @@ import { useQuery } from "@tanstack/react-query"
 import { groupService } from "@/services/api"
 
 interface GroupDropdownProps {
-    value?: string;
-    onChange?: (value: string) => void;
+    value?: number;
+    onChange?: (value: number) => void;
 }
 
 export function GroupDropdown({ value: externalValue, onChange }: GroupDropdownProps) {
     const [open, setOpen] = React.useState(false)
-    const value = externalValue || "";
+    const value = externalValue || -1;
     
     const { data: groups = [], isLoading, error } = useQuery({
             queryKey: ['groups'],
@@ -55,8 +55,8 @@ export function GroupDropdown({ value: externalValue, onChange }: GroupDropdownP
                     aria-expanded={open}
                     className="w-[200px] justify-between"
                 >
-                    {value
-                        ? groups.find((group) => group.title === value)?.title
+                    {value !== -1
+                        ? groups.find((group) => group.id === value)?.title
                         : "Select group..."}
                     <ChevronsUpDown className="opacity-50" />
                 </Button>
@@ -72,7 +72,11 @@ export function GroupDropdown({ value: externalValue, onChange }: GroupDropdownP
                                     key={group.id}
                                     value={group.title}
                                     onSelect={(currentValue) => {
-                                        onChange?.(currentValue === value ? "" : currentValue);
+                                        const selectedGroup = groups.find((g) => g.title === currentValue);
+                                        if (selectedGroup) {
+                                            console.log('Selected group:', selectedGroup);
+                                            onChange?.(selectedGroup.id);
+                                        }
                                         setOpen(false);
                                     }}
                                 >
@@ -80,7 +84,7 @@ export function GroupDropdown({ value: externalValue, onChange }: GroupDropdownP
                                     <Check
                                         className={cn(
                                             "ml-auto",
-                                            value === group.title ? "opacity-100" : "opacity-0"
+                                            value === group.id ? "opacity-100" : "opacity-0"
                                         )}
                                     />
                                 </CommandItem>

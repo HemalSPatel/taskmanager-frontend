@@ -17,6 +17,7 @@ import { Textarea } from "./ui/textarea"
 import { useState } from "react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import type { TaskRequest } from "@/types/task"
+import { GroupDropdown } from "@/components/GroupDropdown"
 
 export default function UpdateTask({ task }: { task: TaskRequest }) {
     const [updatingTask, setUpdatingTask] = useState({ ...task })
@@ -26,14 +27,23 @@ export default function UpdateTask({ task }: { task: TaskRequest }) {
     const updateMutation = useMutation({
         mutationFn: () => { 
             if (!updatingTask.id) throw new Error('Task ID is required');
-            return taskService.updateTask(updatingTask.id, { ...updatingTask })
+            const updatePayload = {
+                title: updatingTask.title.trim(),
+                description: updatingTask.description?.trim() || '',
+                groupId: updatingTask.groupId ? Number(updatingTask.groupId) : undefined
+            };
+            return taskService.updateTask(updatingTask.id, updatePayload);
         },
-        onSuccess: () => {
+        onSuccess: (response) => {
+            if (response.data.groupId !== updatingTask.groupId) {
+                console.error('GroupId mismatch:', { sent: updatingTask.groupId, received: response.data.groupId });
+            }
             queryClient.invalidateQueries({ queryKey: ['tasks'] })
             toast.success('Task updated successfully!')
             setOpen(false)
         },
         onError: (error) => {
+            console.error('Full error details:', error);
             toast.error('Error updating task')
             console.error('Error updating task:', error)
         }
@@ -84,7 +94,10 @@ export default function UpdateTask({ task }: { task: TaskRequest }) {
                                 <Label htmlFor="group">
                                     Group
                                 </Label>
-                                {/* <GroupDropdown value={updatingTask.group} onChange={(value) => setUpdatingTask({ ...updatingTask, group: value })} /> */}
+                                <GroupDropdown 
+                                    value={updatingTask.groupId} 
+                                    onChange={(value) => setUpdatingTask({ ...updatingTask, groupId: value })} 
+                                />
                             </div>
                         </div>
                         <div className="grid flex-1 gap-2">
@@ -110,7 +123,14 @@ export default function UpdateTask({ task }: { task: TaskRequest }) {
                         </Button>
                         <Button 
                             type="submit" 
-                            disabled={!updatingTask.title.trim() || updateMutation.isPending || !updatingTask.id || (updatingTask.title.trim() === task.title && updatingTask.description?.trim() === task.description)}
+                            disabled={
+                                !updatingTask.title.trim() || 
+                                updateMutation.isPending || 
+                                !updatingTask.id || 
+                                (updatingTask.title.trim() === task.title && 
+                                 updatingTask.description?.trim() === task.description && 
+                                 updatingTask.groupId === task.groupId)
+                            }
                         >
                             {updateMutation.isPending && (
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
