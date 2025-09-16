@@ -39,6 +39,7 @@ export default function UpdateTask({ task }: { task: TaskRequest }) {
                 console.error('GroupId mismatch:', { sent: updatingTask.groupId, received: response.data.groupId });
             }
             queryClient.invalidateQueries({ queryKey: ['tasks'] })
+            queryClient.invalidateQueries({ queryKey: ['groups'] })
             toast.success('Task updated successfully!')
             setOpen(false)
         },
