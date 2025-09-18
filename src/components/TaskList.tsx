@@ -6,7 +6,8 @@ import { Checkbox } from './ui/checkbox';
 import { Trash2, Loader2 } from 'lucide-react';
 import { Button } from './ui/button';
 import { toast } from 'sonner';
-import UpdateTask from './UpdateTask';
+import UpdateTask from '@/components/UpdateTask';
+import UnlinkTask from '@/components/UnlinkTask';
 
 interface TaskListProps {
     groupId?: number;
@@ -119,6 +120,8 @@ export default function TaskList({ groupId, ungrouped }: TaskListProps) {
                                 <p className="text-sm text-gray-600">{task.description}</p>
                             )}
                         </div>
+
+                        {task.groupId && <UnlinkTask taskId={task.id} />}
 
                         <UpdateTask task={task} />
 
