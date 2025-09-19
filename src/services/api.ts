@@ -19,7 +19,6 @@ export const taskService = {
   deleteTask: (id: number) => api.delete(`/tasks/${id}`),
   getTasksByGroupId: (groupId: number) => api.get<TaskResponse[]>(`/groups/${groupId}/tasks`),
   getUngroupedTasks: () => api.get<TaskResponse[]>('/tasks/ungrouped'),
-  // assignTaskToGroup: (taskId: number, groupId: number) => api.post(`/tasks/${taskId}/group/${groupId}`),
   removeTaskFromGroup: (taskId: number) => api.put(`/tasks/${taskId}/remove-group`),
 };
 
